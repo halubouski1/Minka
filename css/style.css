@@ -55,6 +55,18 @@ body {
     font-feature-settings: "lnum" 1, "tnum" 1;
 }
 
+/* locks background scroll while the menu / search / popup is open */
+html.is-locked,
+html.is-locked body {
+    overflow: hidden;
+}
+
+.menu,
+.search,
+.popup__body {
+    overscroll-behavior: contain;
+}
+
 h1, h2, h3, h4, h5, h6,
 p {
     margin: 0;
@@ -1298,6 +1310,10 @@ ul {
     display: block;
     width: fit-content;
     margin: 0 auto 50px;
+}
+
+.popular__link--search {
+    display: none;
 }
 
 .search__form {

@@ -17,6 +17,18 @@ if (typeof Lenis !== 'undefined') {
 }
 
 // ========================================
+// Page scroll lock (while an overlay is open)
+// ========================================
+const lockScroll = () => {
+  document.documentElement.classList.add('is-locked');
+  if (lenis) lenis.stop();
+};
+const unlockScroll = () => {
+  document.documentElement.classList.remove('is-locked');
+  if (lenis) lenis.start();
+};
+
+// ========================================
 // AOS init
 // ========================================
 if (typeof AOS !== 'undefined') {
@@ -54,13 +66,13 @@ if (menu && menuOpenBtn) {
   const openMenu = () => {
     menu.classList.add('active');
     if (menuOverlay) menuOverlay.classList.add('active');
-    if (lenis) lenis.stop();
+    lockScroll();
   };
 
   const closeMenu = () => {
     menu.classList.remove('active');
     if (menuOverlay) menuOverlay.classList.remove('active');
-    if (lenis) lenis.start();
+    unlockScroll();
   };
 
   menuOpenBtn.addEventListener('click', openMenu);
@@ -115,12 +127,12 @@ if (menu && menuOpenBtn) {
     const form = popup.querySelector('.popup__form');
     if (form) form.reset();
     popup.classList.add('active');
-    if (lenis) lenis.stop();
+    lockScroll();
   };
 
   const closePopups = () => {
     popups.forEach((p) => p.classList.remove('active'));
-    if (lenis) lenis.start();
+    unlockScroll();
   };
 
   document.querySelectorAll('[data-popup]').forEach((trigger) => {
@@ -168,14 +180,14 @@ if (searchPanel && searchOpenBtn) {
   const openSearch = () => {
     searchPanel.classList.add('active');
     if (searchOverlay) searchOverlay.classList.add('active');
-    if (lenis) lenis.stop();
+    lockScroll();
     if (searchInput) setTimeout(() => searchInput.focus(), 350);
   };
 
   const closeSearch = () => {
     searchPanel.classList.remove('active');
     if (searchOverlay) searchOverlay.classList.remove('active');
-    if (lenis) lenis.start();
+    unlockScroll();
   };
 
   searchOpenBtn.addEventListener('click', openSearch);
