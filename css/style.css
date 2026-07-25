@@ -44,6 +44,7 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -301,6 +302,7 @@ ul {
     justify-content: space-between;
     flex: 1 1 50%;
     padding-bottom: 50px;
+    padding-top: 50px;
 }
 
 .benefits__list {
@@ -362,6 +364,17 @@ ul {
 .popular__list {
     display: flex;
     gap: 10px;
+}
+
+/* slider controls — mobile only */
+.popular__nav,
+.popular__pagination {
+    display: none;
+}
+
+/* extra specificity so it beats .buy__catalog's display */
+.popular .popular__catalog {
+    display: none;
 }
 
 .popular-card {
@@ -446,6 +459,7 @@ ul {
     display: flex;
     justify-content: space-between;
     gap: 40px;
+    padding-right: 64px;
 }
 
 .material__image {
@@ -543,9 +557,21 @@ ul {
     padding-bottom: 120px;
 }
 
-.reviews__title {
+.reviews__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
+}
+
+.reviews__title {
     color: #000;
+}
+
+/* slider controls — mobile only */
+.reviews__nav,
+.reviews__pagination {
+    display: none;
 }
 
 .reviews__list {
@@ -560,6 +586,7 @@ ul {
 
 .review-card__img {
     width: 100%;
+    height: auto;
     margin-bottom: 10px;
     object-fit: cover;
 }
@@ -819,6 +846,11 @@ ul {
     justify-content: center;
 }
 
+.footer__social--telegram img {
+    width: 23px;
+    height: 21px;
+}
+
 /* ==========================================================================
    Menu (dropdown)
    ========================================================================== */
@@ -843,6 +875,8 @@ ul {
     left: 0;
     z-index: 100;
     width: 100%;
+    max-height: var(--fixed-vh, 100vh);
+    overflow-y: auto;
     transform: translateY(-101%);
     transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: none;
@@ -914,13 +948,10 @@ ul {
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-between;
-    opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
 }
 
 .menu__card--active {
-    opacity: 1;
     pointer-events: auto;
 }
 
@@ -931,11 +962,25 @@ ul {
     text-align: right;
     color: #000;
     max-width: 762px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* fade the new description in a beat later so it never overlaps the old text */
+.menu__card--active .menu__desc {
+    opacity: 1;
+    transition: opacity 0.3s ease 0.15s;
 }
 
 .menu__img {
     width: 100%;
     height: auto;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.menu__card--active .menu__img {
+    opacity: 1;
 }
 
 /* ==========================================================================

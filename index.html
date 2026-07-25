@@ -16,15 +16,15 @@
 <header class="header">
     <div class="container header__container">
         <div class="header__left">
-            <button class="header__btn" type="button" data-menu-open>
+            <button class="header__btn header__btn--burger" type="button" data-menu-open>
                 <img src="assets/icons/burger-menu.svg" alt="" width="15" height="5">
                 <span>Меню</span>
             </button>
-            <button class="header__btn" type="button" data-search-open>
+            <button class="header__btn header__btn--search" type="button" data-search-open>
                 <img src="assets/icons/search-icon.svg" alt="" width="12" height="12">
                 <span>Поиск</span>
             </button>
-            <button class="header__btn" type="button">
+            <button class="header__btn header__btn--favorites" type="button">
                 <img src="assets/icons/favorites.svg" alt="" width="10" height="10">
                 <span>Избранное</span>
             </button>
@@ -42,7 +42,7 @@
 </header>
 
 <div class="menu-overlay" data-menu-close></div>
-<div class="menu" id="menu">
+<div class="menu" id="menu" data-lenis-prevent>
     <div class="menu__panel">
         <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню">
             <img src="assets/icons/close.svg" alt="" width="18" height="18">
@@ -94,7 +94,7 @@
 </div>
 
 <div class="search-overlay" data-search-close></div>
-<div class="search" id="search">
+<div class="search" id="search" data-lenis-prevent>
     <div class="search__panel">
         <button class="search__close" type="button" data-search-close aria-label="Закрыть поиск">
             <img src="assets/icons/close.svg" alt="" width="18" height="18">
@@ -110,12 +110,21 @@
                 <button class="search__clear" type="button" data-search-clear>Очистить</button>
             </form>
 
-            <div class="popular">
+            <div class="popular popular--slider">
                 <div class="popular__top">
                     <h2 class="popular__title section-title">Может быть интересно</h2>
                     <a class="hero__availability popular__link" href="#">Смотреть каталог</a>
+                    <div class="popular__nav">
+                        <button class="popular__arrow popular__arrow--prev" type="button" aria-label="Предыдущий слайд">
+                            <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                        </button>
+                        <button class="popular__arrow popular__arrow--next" type="button" aria-label="Следующий слайд">
+                            <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                        </button>
+                    </div>
                 </div>
 
+                <div class="popular__slider">
                 <div class="popular__list">
                     <a class="popular-card" href="#">
                         <button class="popular-card__fav" type="button" aria-label="В избранное">
@@ -150,6 +159,11 @@
                         <p class="popular-card__price">$ 1200</p>
                     </a>
                 </div>
+                </div>
+
+                <div class="popular__pagination"></div>
+
+                <a class="hero__availability popular__link popular__link--search" href="#">Смотреть каталог</a>
             </div>
         </div>
     </div>
@@ -193,7 +207,7 @@
                 </div>
             </div>
 
-            <p class="benefits__note">Приобретение шубы&nbsp;&mdash; серьёзная инвестиция<br>и важное событие. Вопросы при выборе естественны. Консультант шоурума, опираясь на многолетний опыт, поможет развеять сомнения и даст полезные рекомендации для покупки.</p>
+            <p class="benefits__note">Приобретение шубы&nbsp;&mdash; серьёзная инвестиция<br> и важное событие. Вопросы при выборе естественны. Консультант шоурума, опираясь на многолетний опыт, поможет развеять сомнения и даст полезные рекомендации для покупки.</p>
         </div>
 
         <div class="benefits__right">
@@ -202,13 +216,22 @@
     </div>
 </section>
 
-<section class="popular section-padding" data-aos="fade-up">
+<section class="popular popular--slider section-padding" data-aos="fade-up">
     <div class="container">
         <div class="popular__top">
             <h2 class="popular__title section-title">Популярные модели</h2>
             <a class="hero__availability popular__link" href="#">Смотреть каталог</a>
+            <div class="popular__nav">
+                <button class="popular__arrow popular__arrow--prev" type="button" aria-label="Предыдущий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+                <button class="popular__arrow popular__arrow--next" type="button" aria-label="Следующий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+            </div>
         </div>
 
+        <div class="popular__slider">
         <div class="popular__list">
             <a class="popular-card" href="#">
                 <button class="popular-card__fav" type="button" aria-label="В избранное">
@@ -243,6 +266,11 @@
                 <p class="popular-card__price">$ 1200</p>
             </a>
         </div>
+        </div>
+
+        <div class="popular__pagination"></div>
+
+        <a class="popular__catalog hero__catalog buy__catalog" href="#">Смотреть каталог</a>
     </div>
 </section>
 
@@ -292,8 +320,19 @@
 
 <section class="reviews section-padding" data-aos="fade-up" data-aos-delay="100">
     <div class="container">
-        <h2 class="reviews__title section-title">О наших шубах говорят</h2>
+        <div class="reviews__top">
+            <h2 class="reviews__title section-title">О наших шубах говорят</h2>
+            <div class="reviews__nav">
+                <button class="reviews__arrow reviews__arrow--prev" type="button" aria-label="Предыдущий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+                <button class="reviews__arrow reviews__arrow--next" type="button" aria-label="Следующий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+            </div>
+        </div>
 
+        <div class="reviews__slider">
         <div class="reviews__list">
             <div class="review-card review-card--image">
                 <img class="review-card__img" src="assets/img/review-card-1.jpg" alt="Покупательница MINKA" width="452" height="535">
@@ -324,6 +363,9 @@
                 <a class="hero__catalog buy__catalog" href="#">Смотреть каталог</a>
             </div>
         </div>
+        </div>
+
+        <div class="reviews__pagination"></div>
     </div>
 </section>
 
@@ -428,7 +470,7 @@
                     <a class="footer__social" href="#" aria-label="WhatsApp">
                         <img src="assets/icons/whatsapp.svg" alt="" width="24" height="24">
                     </a>
-                    <a class="footer__social" href="#" aria-label="Telegram">
+                    <a class="footer__social footer__social--telegram" href="#" aria-label="Telegram">
                         <img src="assets/icons/tg.svg" alt="" width="21" height="19">
                     </a>
                 </div>
@@ -456,7 +498,7 @@
             <img src="assets/img/popup-card-showroom.jpg" alt="" width="607" height="737">
         </div>
 
-        <div class="popup__body">
+        <div class="popup__body" data-lenis-prevent>
             <button class="popup__close" type="button" data-popup-close aria-label="Закрыть">
                 <img src="assets/icons/close.svg" alt="" width="18" height="18">
             </button>
@@ -522,7 +564,7 @@
             <img src="assets/img/popup-card-showroom.jpg" alt="" width="607" height="737">
         </div>
 
-        <div class="popup__body">
+        <div class="popup__body" data-lenis-prevent>
             <button class="popup__close" type="button" data-popup-close aria-label="Закрыть">
                 <img src="assets/icons/close.svg" alt="" width="18" height="18">
             </button>

@@ -78,11 +78,27 @@ if (menu && menuOpenBtn) {
     });
   };
 
+  const noHover = window.matchMedia('(hover: none)');
+
   menu.querySelectorAll('.menu__link').forEach((link) => {
     link.addEventListener('mouseenter', () => activateCard(link.dataset.menuTarget));
+
+    link.addEventListener('click', (e) => {
+      activateCard(link.dataset.menuTarget);
+      if (noHover.matches) {
+        // Touch: let the person see the preview change, then follow the link
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        setTimeout(() => {
+          if (href && href !== '#') window.location.href = href;
+        }, 700);
+      }
+    });
   });
 
-  if (menuNav) {
+  // Revert to the default preview only on hover-capable (desktop) devices,
+  // otherwise a tap flickers target → default on touch.
+  if (menuNav && !noHover.matches) {
     menuNav.addEventListener('mouseleave', () => activateCard('default'));
   }
 }
@@ -225,4 +241,65 @@ if (header) {
     window.addEventListener('scroll', () => updateHeader(), { passive: true });
   }
   updateHeader();
+}
+
+// ========================================
+// Popular slider (mobile only, ≤570px)
+// ========================================
+if (typeof Swiper !== 'undefined') {
+  const popularMq = window.matchMedia('(max-width: 570px)');
+  let popularSwipers = [];
+
+  const initPopularSliders = () => {
+    document.querySelectorAll('.popular__slider').forEach((sliderEl) => {
+      const scope = sliderEl.closest('.popular') || sliderEl.parentElement;
+      popularSwipers.push(new Swiper(sliderEl, {
+        wrapperClass: 'popular__list',
+        slideClass: 'popular-card',
+        slidesPerView: 1,
+        spaceBetween: 20,
+        navigation: {
+          prevEl: scope.querySelector('.popular__arrow--prev'),
+          nextEl: scope.querySelector('.popular__arrow--next'),
+          disabledClass: 'popular__arrow--disabled',
+        },
+        pagination: {
+          el: scope.querySelector('.popular__pagination'),
+          clickable: true,
+        },
+      }));
+    });
+
+    document.querySelectorAll('.reviews__slider').forEach((sliderEl) => {
+      const scope = sliderEl.closest('.reviews') || sliderEl.parentElement;
+      popularSwipers.push(new Swiper(sliderEl, {
+        wrapperClass: 'reviews__list',
+        slideClass: 'review-card',
+        slidesPerView: 1,
+        spaceBetween: 20,
+        navigation: {
+          prevEl: scope.querySelector('.reviews__arrow--prev'),
+          nextEl: scope.querySelector('.reviews__arrow--next'),
+          disabledClass: 'reviews__arrow--disabled',
+        },
+        pagination: {
+          el: scope.querySelector('.reviews__pagination'),
+          clickable: true,
+        },
+      }));
+    });
+  };
+
+  const destroyPopularSliders = () => {
+    popularSwipers.forEach((s) => s.destroy(true, true));
+    popularSwipers = [];
+  };
+
+  const handlePopularMq = (e) => {
+    if (e.matches) initPopularSliders();
+    else destroyPopularSliders();
+  };
+
+  popularMq.addEventListener('change', handlePopularMq);
+  handlePopularMq(popularMq);
 }
