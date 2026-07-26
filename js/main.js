@@ -210,12 +210,12 @@ if (searchPanel && searchOpenBtn) {
 // ========================================
 // Favorite buttons (product cards)
 // ========================================
-document.querySelectorAll('.popular-card__fav').forEach((fav) => {
-  fav.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    fav.classList.toggle('is-active');
-  });
+// delegated so dynamically added cards (e.g. catalog "show more") work too
+document.addEventListener('click', (e) => {
+  const fav = e.target.closest('.popular-card__fav');
+  if (!fav) return;
+  e.preventDefault();
+  fav.classList.toggle('is-active');
 });
 
 // ========================================
@@ -238,11 +238,12 @@ if (header) {
       header.classList.remove('header--hidden');
     }
 
-    // Switch to the light (white) theme once the hero has scrolled past
-    const heroBottom = heroForHeader
-      ? heroForHeader.getBoundingClientRect().bottom
-      : window.innerHeight;
-    header.classList.toggle('header--light', heroBottom <= headerHeight);
+    // Hero pages: go light once the hero has scrolled past.
+    // Other pages (already-white header): just add the shadow once scrolled.
+    const isLight = heroForHeader
+      ? heroForHeader.getBoundingClientRect().bottom <= headerHeight
+      : current > 10;
+    header.classList.toggle('header--light', isLight);
 
     lastScroll = current < 0 ? 0 : current;
   };
@@ -315,3 +316,305 @@ if (typeof Swiper !== 'undefined') {
   popularMq.addEventListener('change', handlePopularMq);
   handlePopularMq(popularMq);
 }
+
+// ========================================
+// Catalog "show more" (append + reveal more rows)
+// ========================================
+const catalogGrid = document.querySelector('.catalog__grid');
+const catalogMore = document.querySelector('.catalog__more');
+
+if (catalogGrid && catalogMore) {
+  catalogMore.addEventListener('click', () => {
+    const hiddenRows = catalogGrid.querySelectorAll('.catalog__row--hidden');
+    if (!hiddenRows.length) return;
+
+    hiddenRows.forEach((row) => {
+      row.classList.remove('catalog__row--hidden'); // now takes layout...
+      row.classList.add('catalog__row--enter');     // ...but starts invisible
+    });
+
+    // paint the hidden state, then transition it in
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        hiddenRows.forEach((row) => row.classList.remove('catalog__row--enter'));
+      });
+    });
+
+    // nothing left to reveal → drop the button
+    catalogMore.remove();
+  });
+}
+
+// ========================================
+// Catalog filter dropdowns
+// ========================================
+const catalogFilters = document.querySelectorAll('.catalog__filter');
+
+if (catalogFilters.length) {
+  catalogFilters.forEach((filter) => {
+    const btn = filter.querySelector('.catalog__filter-btn');
+    const dropdown = filter.querySelector('.catalog__dropdown');
+    if (!btn) return;
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wasOpen = filter.classList.contains('is-open');
+      catalogFilters.forEach((f) => f.classList.remove('is-open'));
+      if (!wasOpen) filter.classList.add('is-open');
+    });
+
+    // clicking the checkboxes shouldn't close the dropdown
+    if (dropdown) dropdown.addEventListener('click', (e) => e.stopPropagation());
+  });
+
+  // click outside or Escape closes any open filter
+  document.addEventListener('click', () => {
+    catalogFilters.forEach((f) => f.classList.remove('is-open'));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') catalogFilters.forEach((f) => f.classList.remove('is-open'));
+  });
+
+  // sort: single choice — mark it active and close the dropdown
+  document.querySelectorAll('.catalog__sort-option').forEach((option) => {
+    option.addEventListener('click', () => {
+      const dropdown = option.closest('.catalog__dropdown');
+      if (dropdown) {
+        dropdown.querySelectorAll('.catalog__sort-option').forEach((o) =>
+          o.classList.remove('catalog__sort-option--active'));
+      }
+      option.classList.add('catalog__sort-option--active');
+      const filter = option.closest('.catalog__filter');
+      if (filter) filter.classList.remove('is-open');
+    });
+  });
+
+  // per-filter selected-count badge (checkbox filters only)
+  catalogFilters.forEach((filter) => {
+    const checkboxes = filter.querySelectorAll('.catalog__checkbox');
+    const btn = filter.querySelector('.catalog__filter-btn');
+    if (!checkboxes.length || !btn) return; // skips price & sort
+
+    const badge = document.createElement('span');
+    badge.className = 'catalog__filter-count';
+    btn.appendChild(badge);
+
+    let prev = 0;
+    const updateCount = () => {
+      const count = filter.querySelectorAll('.catalog__checkbox:checked').length;
+      if (count > 0) {
+        badge.textContent = count;
+        badge.classList.add('catalog__filter-count--visible');
+        // already-visible → re-count: give it a little pop
+        if (prev > 0) {
+          badge.animate(
+            [{ transform: 'scale(1.3)' }, { transform: 'scale(1)' }],
+            { duration: 250, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }
+          );
+        }
+      } else {
+        badge.classList.remove('catalog__filter-count--visible');
+      }
+      prev = count;
+    };
+
+    checkboxes.forEach((cb) => cb.addEventListener('change', updateCount));
+    updateCount();
+  });
+
+  // "Очистить" — reset every filter (but not the sort)
+  const clearAllFilters = () => {
+    // untick all checkboxes (their squares animate out)
+    document.querySelectorAll('.catalog__checkbox:checked').forEach((cb) => {
+      cb.checked = false;
+    });
+    // refresh each checkbox filter's badge once so it fades out
+    catalogFilters.forEach((filter) => {
+      const cb = filter.querySelector('.catalog__checkbox');
+      if (cb) cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    // let the price slider(s) glide back to their default range
+    document.dispatchEvent(new CustomEvent('catalog:clear'));
+  };
+
+  // both clear buttons (desktop bar + offcanvas footer) appear only while at
+  // least one filter is selected, and both trigger the same reset
+  const desktopClearBtn = document.querySelector('.catalog__clear');
+  const mobileClearBtn = document.querySelector('.filters__clear');
+  const allCheckboxes = document.querySelectorAll('.catalog__checkbox');
+  const rangeInputs = document.querySelectorAll('.catalog__range-input');
+
+  // "active" = any checkbox ticked OR any price handle moved off its default
+  const anyFilterActive = () => {
+    const anyChecked = Array.from(allCheckboxes).some((cb) => cb.checked);
+    const anyPrice = Array.from(rangeInputs).some((i) => i.value !== i.defaultValue);
+    return anyChecked || anyPrice;
+  };
+
+  const updateClearVisibility = () => {
+    const active = anyFilterActive();
+    if (desktopClearBtn) desktopClearBtn.classList.toggle('catalog__clear--visible', active);
+    if (mobileClearBtn) mobileClearBtn.classList.toggle('filters__clear--visible', active);
+  };
+  allCheckboxes.forEach((cb) => cb.addEventListener('change', updateClearVisibility));
+  rangeInputs.forEach((i) => i.addEventListener('input', updateClearVisibility));
+  updateClearVisibility();
+
+  if (desktopClearBtn) desktopClearBtn.addEventListener('click', clearAllFilters);
+  if (mobileClearBtn) mobileClearBtn.addEventListener('click', clearAllFilters);
+}
+
+// ========================================
+// Catalog mobile filters offcanvas (≤1024)
+// ========================================
+const filtersPanel = document.getElementById('filters');
+const filtersOpenBtn = document.querySelector('[data-filters-open]');
+
+if (filtersPanel && filtersOpenBtn) {
+  const filtersOverlay = document.querySelector('.filters-overlay');
+
+  const openFilters = () => {
+    filtersPanel.classList.add('active');
+    if (filtersOverlay) filtersOverlay.classList.add('active');
+    lockScroll();
+  };
+  const closeFilters = () => {
+    filtersPanel.classList.remove('active');
+    if (filtersOverlay) filtersOverlay.classList.remove('active');
+    unlockScroll();
+  };
+
+  filtersOpenBtn.addEventListener('click', openFilters);
+  document.querySelectorAll('[data-filters-close]').forEach((el) => {
+    el.addEventListener('click', closeFilters);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && filtersPanel.classList.contains('active')) closeFilters();
+  });
+
+  // accordion — each filter expands/collapses independently
+  filtersPanel.querySelectorAll('.filters-acc__btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const acc = btn.closest('.filters-acc');
+      if (acc) acc.classList.toggle('is-open');
+    });
+  });
+}
+
+// ========================================
+// Catalog price range slider (dual handle)
+// ========================================
+document.querySelectorAll('.catalog__range').forEach((range) => {
+  const minInput = range.querySelector('.catalog__range-input--min');
+  const maxInput = range.querySelector('.catalog__range-input--max');
+  const fill = range.querySelector('.catalog__range-fill');
+  if (!minInput || !maxInput || !fill) return;
+
+  const dropdown = range.closest('.catalog__dropdown') || range.parentElement;
+  const fromLabel = dropdown.querySelector('.catalog__range-from');
+  const toLabel = dropdown.querySelector('.catalog__range-to');
+  const summary = dropdown.querySelector('.catalog__range-summary');
+
+  const rangeMin = Number(minInput.min);
+  const rangeMax = Number(minInput.max);
+  const step = Number(minInput.step) || 1;
+  const span = rangeMax - rangeMin || 1;
+  const money = (n) => '$ ' + n.toLocaleString('ru-RU');
+
+  const update = () => {
+    const minVal = Number(minInput.value);
+    const maxVal = Number(maxInput.value);
+    const minPct = ((minVal - rangeMin) / span) * 100;
+    const maxPct = ((maxVal - rangeMin) / span) * 100;
+    fill.style.left = minPct + '%';
+    fill.style.width = (maxPct - minPct) + '%';
+    if (fromLabel) fromLabel.textContent = money(minVal);
+    if (toLabel) toLabel.textContent = money(maxVal);
+    if (summary) summary.textContent = `От ${money(minVal)} до ${money(maxVal)}`;
+  };
+
+  // the step-snapped value under a given horizontal position
+  const valueAt = (clientX) => {
+    const rect = range.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const raw = rangeMin + ratio * span;
+    return Math.min(rangeMax, Math.max(rangeMin, Math.round(raw / step) * step));
+  };
+
+  let activeInput = null;
+
+  // move the grabbed handle, without letting it cross past the other one
+  const moveTo = (clientX) => {
+    const value = valueAt(clientX);
+    if (activeInput === minInput) {
+      minInput.value = Math.min(value, Number(maxInput.value));
+    } else {
+      maxInput.value = Math.max(value, Number(minInput.value));
+    }
+    update();
+    // dragging doesn't fire a native 'input' — emit one so outside listeners
+    // (e.g. the "Очистить" button) know the price changed
+    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+
+  range.addEventListener('pointerdown', (e) => {
+    const value = valueAt(e.clientX);
+    const minVal = Number(minInput.value);
+    const maxVal = Number(maxInput.value);
+
+    // grab whichever square is nearest to where you pressed
+    if (value <= minVal) activeInput = minInput;
+    else if (value >= maxVal) activeInput = maxInput;
+    else activeInput = value - minVal <= maxVal - value ? minInput : maxInput;
+
+    activeInput.focus();
+    moveTo(e.clientX);
+    range.setPointerCapture(e.pointerId);
+  });
+
+  range.addEventListener('pointermove', (e) => {
+    if (activeInput) moveTo(e.clientX);
+  });
+
+  const endDrag = (e) => {
+    if (!activeInput) return;
+    activeInput = null;
+    if (range.hasPointerCapture(e.pointerId)) range.releasePointerCapture(e.pointerId);
+  };
+  range.addEventListener('pointerup', endDrag);
+  range.addEventListener('pointercancel', endDrag);
+
+  // keyboard (arrows on a focused handle) keeps the visuals in sync
+  minInput.addEventListener('input', update);
+  maxInput.addEventListener('input', update);
+
+  // "Очистить" → animate the handles back to their default positions
+  document.addEventListener('catalog:clear', () => {
+    const startMin = Number(minInput.value);
+    const startMax = Number(maxInput.value);
+    const endMin = Number(minInput.defaultValue);
+    const endMax = Number(maxInput.defaultValue);
+    if (startMin === endMin && startMax === endMax) return;
+
+    const duration = 350;
+    const t0 = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
+    const frame = (now) => {
+      const p = Math.min(1, (now - t0) / duration);
+      const e = ease(p);
+      minInput.value = Math.round((startMin + (endMin - startMin) * e) / step) * step;
+      maxInput.value = Math.round((startMax + (endMax - startMax) * e) / step) * step;
+      update();
+      if (p < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        // back at default — let the clear button re-evaluate and hide
+        minInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    };
+    requestAnimationFrame(frame);
+  });
+
+  update();
+});

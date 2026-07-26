@@ -742,11 +742,6 @@
         display: none;
     }
 
-    .header__logo {
-        margin-right: -13%;
-        margin-left: 0;
-    }
-
     .header__btn--burger img {
         width: 20px;
         height: 17px;
@@ -868,10 +863,6 @@
     .header__logo img {
         width: 80px;
         height: auto;
-    }
-
-    .header__logo {
-        margin-right: 17%;
     }
 
     .header__phone span {
