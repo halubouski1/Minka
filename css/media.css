@@ -882,7 +882,7 @@
     /* .hero */
     .hero {
         padding-bottom: 20px;
-        background: url(../assets/img/hero-mob-bg.png) center / cover no-repeat;
+        background: url(../assets/img/hero-mob-bg.png) center left 49% / cover no-repeat;
     }
 
     .hero__content {

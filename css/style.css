@@ -149,6 +149,10 @@ ul {
     transition: filter 0.4s ease;
 }
 
+.header__logo {
+    margin-left: 4px;
+}
+
 .header--hidden {
     transform: translateY(-100%);
 }
@@ -287,6 +291,7 @@ ul {
     border: 1px solid #fff;
     font-weight: 400;
     font-size: 20px;
+    text-align: center;
     color: #fff;
     text-transform: uppercase;
     transition: background-color 0.25s ease, color 0.25s ease;
