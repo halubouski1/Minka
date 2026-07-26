@@ -350,7 +350,7 @@ if (typeof Swiper !== 'undefined') {
         wrapperClass: 'single__gallery-list',
         slideClass: 'single__img',
         slidesPerView: 1,
-        spaceBetween: 0,
+        spaceBetween: 20,
         navigation: {
           prevEl: galleryEl.querySelector('.single__arrow--prev'),
           nextEl: galleryEl.querySelector('.single__arrow--next'),
@@ -405,6 +405,19 @@ if (catalogGrid && catalogMore) {
 
     // nothing left to reveal → drop the button
     catalogMore.remove();
+  });
+}
+
+// ========================================
+// Blog "show more" (reveal the capped-off cards)
+// ========================================
+const blogGrid = document.querySelector('.blog__grid');
+const blogMore = document.querySelector('.blog__more');
+
+if (blogGrid && blogMore) {
+  blogMore.addEventListener('click', () => {
+    blogGrid.classList.add('is-expanded');
+    blogMore.remove();
   });
 }
 
