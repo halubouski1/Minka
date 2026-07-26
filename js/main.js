@@ -168,6 +168,22 @@ if (menu && menuOpenBtn) {
 })();
 
 // ========================================
+// Gift popup: mirror the name fields into the greeting blanks
+// ========================================
+document.querySelectorAll('[data-fill-source]').forEach((input) => {
+  const target = document.querySelector(`[data-fill-target="${input.dataset.fillSource}"]`);
+  if (!target) return;
+
+  input.addEventListener('input', () => {
+    target.textContent = input.value.trim();
+  });
+
+  // popups reopen with a fresh form (form.reset()) — clear the mirror too
+  const form = input.closest('form');
+  if (form) form.addEventListener('reset', () => { target.textContent = ''; });
+});
+
+// ========================================
 // Search panel
 // ========================================
 const searchPanel = document.getElementById('search');
@@ -212,7 +228,7 @@ if (searchPanel && searchOpenBtn) {
 // ========================================
 // delegated so dynamically added cards (e.g. catalog "show more") work too
 document.addEventListener('click', (e) => {
-  const fav = e.target.closest('.popular-card__fav');
+  const fav = e.target.closest('.popular-card__fav, .single__fav');
   if (!fav) return;
   e.preventDefault();
   fav.classList.toggle('is-active');
@@ -315,6 +331,53 @@ if (typeof Swiper !== 'undefined') {
 
   popularMq.addEventListener('change', handlePopularMq);
   handlePopularMq(popularMq);
+}
+
+// ========================================
+// Single product gallery slider (≤769px)
+// ========================================
+if (typeof Swiper !== 'undefined') {
+  const galleryEl = document.querySelector('.single__gallery');
+  const sliderEl = galleryEl && galleryEl.querySelector('.single__slider');
+
+  if (sliderEl) {
+    const galleryMq = window.matchMedia('(max-width: 769px)');
+    let gallerySwiper = null;
+
+    const initGallery = () => {
+      if (gallerySwiper) return;
+      gallerySwiper = new Swiper(sliderEl, {
+        wrapperClass: 'single__gallery-list',
+        slideClass: 'single__img',
+        slidesPerView: 1,
+        spaceBetween: 0,
+        navigation: {
+          prevEl: galleryEl.querySelector('.single__arrow--prev'),
+          nextEl: galleryEl.querySelector('.single__arrow--next'),
+          disabledClass: 'single__arrow--disabled',
+        },
+        pagination: {
+          el: galleryEl.querySelector('.single__pagination'),
+          clickable: true,
+        },
+      });
+    };
+
+    const destroyGallery = () => {
+      if (gallerySwiper) {
+        gallerySwiper.destroy(true, true);
+        gallerySwiper = null;
+      }
+    };
+
+    const handleGalleryMq = (e) => {
+      if (e.matches) initGallery();
+      else destroyGallery();
+    };
+
+    galleryMq.addEventListener('change', handleGalleryMq);
+    handleGalleryMq(galleryMq);
+  }
 }
 
 // ========================================
