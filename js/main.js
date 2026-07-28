@@ -184,6 +184,34 @@ document.querySelectorAll('[data-fill-source]').forEach((input) => {
 });
 
 // ========================================
+// Contacts: copy phone / email to clipboard
+// ========================================
+document.querySelectorAll('.contacts__copy').forEach((btn) => {
+  const original = btn.textContent;
+  btn.addEventListener('click', () => {
+    const value = btn.closest('.contacts__row')?.querySelector('.contacts__value');
+    if (!value || !navigator.clipboard) return;
+    navigator.clipboard.writeText(value.textContent.trim());
+    btn.textContent = 'Скопировано';
+    clearTimeout(btn._copyTimer);
+    btn._copyTimer = setTimeout(() => { btn.textContent = original; }, 1500);
+  });
+});
+
+// ========================================
+// Inline contact form: "Хорошо" clears the thank-you and restores the form
+// (the overlay close handler only toggles .active, not .submitted)
+// ========================================
+document.querySelectorAll('.popup--inline [data-popup-close]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const popup = btn.closest('.popup--inline');
+    if (!popup) return;
+    popup.classList.remove('submitted');
+    popup.querySelector('.popup__form')?.reset();
+  });
+});
+
+// ========================================
 // Search panel
 // ========================================
 const searchPanel = document.getElementById('search');
