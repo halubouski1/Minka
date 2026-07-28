@@ -133,6 +133,11 @@
         top:auto;
         margin-top: 5px;
     }
+
+    .catalog__sort-chevron {
+        display: inline-block;
+    }
+    
 }
 
 @media (max-width: 570px) {

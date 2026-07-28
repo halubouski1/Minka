@@ -201,6 +201,7 @@
 .catalog__sort-chevron {
     margin-top: 4px;
     transition: transform 0.3s ease;
+    display: none;
 }
 
 .catalog__filter--sort.is-open .catalog__sort-chevron {
