@@ -31,6 +31,10 @@
         font-size: 16px;
     }
 
+    .post ul li, .post ol li {
+        font-size: 16px;
+    }
+
     .post__text {
         gap: 26px;
         margin-bottom: 22px;
@@ -97,6 +101,10 @@
     }
 
     .post p {
+        font-size: 14px;
+    }
+
+    .post ul li, .post ol li {
         font-size: 14px;
     }
 
