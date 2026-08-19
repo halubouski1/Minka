@@ -5,8 +5,12 @@
 
     .catalog__breadcrumbs {
         font-size: 18px;
-        margin-bottom: 22px;
+        margin-bottom: 14px;
         gap: 11px;
+    }
+
+    .catalog__title {
+        margin-bottom: 22px;
     }
 
     .contacts__image {
@@ -24,6 +28,7 @@
     }
 
     .contacts__title {
+        font-size: 25px;
         margin-bottom: 8px;
     }
 
@@ -84,6 +89,10 @@
         margin-left: -30px;
     }
 
+    .contacts__title {
+        font-size: 20px;
+    }
+
     .contacts__socials {
         flex-direction: row;
     }
@@ -133,12 +142,13 @@
 
     .catalog__breadcrumbs {
         font-size: 14px;
-        margin-bottom: 14px;
+        margin-bottom: 8px;
         gap: 6px;
     }
 
     .contacts__title {
         margin-bottom: 4px;
+        font-size: 18px;
     }
 
     .contacts__desc {

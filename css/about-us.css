@@ -25,12 +25,18 @@
     padding-top: 142px;
 }
 
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
 .catalog__breadcrumbs {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 14px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-weight: 300;
     font-size: 24px;
     color: #000;
@@ -90,7 +96,8 @@
 
 .about__title {
     margin-bottom: 10px;
-    max-width: 640px;
+    max-width: 540px;
+    font-size: 34px;
 }
 
 .about__text {
@@ -121,6 +128,7 @@
 
 .about__subtitle {
     margin-bottom: 10px;
+    font-size: 34px;
     color: #000;
 }
 
