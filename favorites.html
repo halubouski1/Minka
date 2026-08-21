@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+      <link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+      <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+      <link rel="manifest" href="assets/icons/site.webmanifest">
+      <meta name="theme-color" content="#ffffff">
+      <meta name="robots" content="noindex, follow">
+      <link rel="stylesheet" href="css/aos.css">
+      <link rel="stylesheet" href="css/swiper-bundle.min.css">
       <link rel="stylesheet" href="css/normalize.css">
       <link rel="stylesheet" href="css/style.css">
       <link rel="stylesheet" href="css/media.css">
       <link rel="stylesheet" href="css/favorites.css">
       <link rel="stylesheet" href="css/media-favorites.css"> 
       <script>document.documentElement.style.setProperty("--fixed-vh", window.innerHeight + "px");</script>
-      <title>Minka - каталог</title>
+      <title>Minka - Избранное</title>
 </head>
 <body>
+
+<a class="skip-link" href="#main-content">Перейти к содержимому</a>
 
 <header class="header">
     <div class="container header__container">
@@ -44,7 +53,7 @@
 </header>
 
 <div class="menu-overlay" data-menu-close></div>
-<div class="menu" id="menu" data-lenis-prevent>
+<div class="menu" id="menu" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Главное меню">
     <div class="menu__panel">
         <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню">
             <img src="assets/icons/close.svg" alt="" width="18" height="18">
@@ -67,27 +76,27 @@
                 <div class="menu__preview">
                     <div class="menu__card menu__card--active" data-menu-card="default">
                         <p class="menu__desc">MINKA — только натуральная норка. Собственное производство, прямые поставки с аукционов, без посредников. Более 200 моделей в наличии и под заказ. Индивидуальная примерка в шоуруме, помощь с выбором <br> и бережный уход — всё, чтобы шуба радовала десятилетиями.</p>
-                        <img class="menu__img" src="assets/img/menu-card-0.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-0.webp" alt="" width="915" height="583">
                     </div>
                     <div class="menu__card" data-menu-card="catalog">
                         <p class="menu__desc">Более 200 моделей норковых шуб в наличии и под заказ. От сдержанной классики до актуальных фасонов — каждая модель прошла отбор по качеству меха, кроя и фурнитуры. Коллекция обновляется регулярно.</p>
-                        <img class="menu__img" src="assets/img/menu-card-1.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-1.webp" alt="" width="915" height="583">
                     </div>
                     <div class="menu__card" data-menu-card="about">
                         <p class="menu__desc">MINKA — это 12 лет работы с натуральной норкой. Наша специализация — только норковые шубы. Закупаем мех напрямую на международных аукционах, шьём на собственном производстве. Без посредников и лишних наценок.</p>
-                        <img class="menu__img" src="assets/img/menu-card-2.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-2.webp" alt="" width="915" height="583">
                     </div>
                     <div class="menu__card" data-menu-card="care">
                         <p class="menu__desc">Норка — живой мех. Несколько простых привычек сохранят блеск, форму и густоту подпушка на много сезонов. Здесь — всё, что мы советуем нашим клиентам: от хранения до поведения в дождь и снег.</p>
-                        <img class="menu__img" src="assets/img/menu-card-3.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-3.webp" alt="" width="915" height="583">
                     </div>
                     <div class="menu__card" data-menu-card="contacts">
                         <p class="menu__desc">Шоурум для индивидуальной примерки, телефон для записи и любых вопросов. Приезжайте — покажем модели вживую, поможем с размером и фасоном. Мы на связи удобным вам способом.</p>
-                        <img class="menu__img" src="assets/img/menu-card-4.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-4.webp" alt="" width="915" height="583">
                     </div>
                     <div class="menu__card" data-menu-card="blog">
                         <p class="menu__desc">Статьи о мехе, выборе норковой шубы и тонкостях, которые полезно знать перед покупкой. Опыт, наблюдения и рекомендации от команды MINKA.</p>
-                        <img class="menu__img" src="assets/img/menu-card-5.jpg" alt="" width="915" height="583">
+                        <img class="menu__img" src="assets/img/menu-card-5.webp" alt="" width="915" height="583">
                     </div>
                 </div>
             </div>
@@ -96,7 +105,7 @@
 </div>
 
 <div class="search-overlay" data-search-close></div>
-<div class="search" id="search" data-lenis-prevent>
+<div class="search" id="search" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Поиск по сайту">
     <div class="search__panel">
         <button class="search__close" type="button" data-search-close aria-label="Закрыть поиск">
             <img src="assets/icons/close.svg" alt="" width="18" height="18">
@@ -128,38 +137,50 @@
 
                 <div class="popular__slider">
                 <div class="popular__list">
-                    <a class="popular-card" href="single.html">
+                    <div class="popular-card">
                         <button class="popular-card__fav" type="button" aria-label="В избранное">
                             <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                         </button>
-                        <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                        <h3 class="popular-card__title">Модель шубы</h3>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
                         <p class="popular-card__price">$ 1200</p>
-                    </a>
-                    <a class="popular-card" href="single.html">
+                        </a>
+                    </div>
+                    <div class="popular-card">
                         <button class="popular-card__fav" type="button" aria-label="В избранное">
                             <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                         </button>
-                        <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                        <h3 class="popular-card__title">Модель шубы</h3>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
                         <p class="popular-card__price">$ 1200</p>
-                    </a>
-                    <a class="popular-card" href="single.html">
+                        </a>
+                    </div>
+                    <div class="popular-card">
                         <button class="popular-card__fav" type="button" aria-label="В избранное">
                             <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                         </button>
-                        <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                        <h3 class="popular-card__title">Модель шубы</h3>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
                         <p class="popular-card__price">$ 1200</p>
-                    </a>
-                    <a class="popular-card" href="single.html">
+                        </a>
+                    </div>
+                    <div class="popular-card">
                         <button class="popular-card__fav" type="button" aria-label="В избранное">
                             <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                         </button>
-                        <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                        <h3 class="popular-card__title">Модель шубы</h3>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
                         <p class="popular-card__price">$ 1200</p>
-                    </a>
+                        </a>
+                    </div>
                 </div>
                 </div>
 
@@ -171,55 +192,68 @@
     </div>
 </div>
 
+<main id="main-content">
 <section class="catalog" data-aos="fade-up">
     <div class="container">
-        <nav class="catalog__breadcrumbs">
+        <nav class="catalog__breadcrumbs" aria-label="Навигационная цепочка">
             <a class="catalog__crumb" href="index.html">Главная</a>
             <span class="catalog__sep">/</span>
-            <span class="catalog__crumb catalog__crumb--current">Избранное</span>
+            <span class="catalog__crumb catalog__crumb--current" aria-current="page">Избранное</span>
         </nav>
         <h1 class="catalog__title section-title">Избранное</h1>
     </div>
 </section>
 
-<section class="popular favorites section-padding" data-aos="fade-up">
+<div class="popular favorites section-padding" data-aos="fade-up">
     <div class="container">
         <div class="popular__list">
-            <a class="popular-card" href="single.html">
+            <div class="popular-card">
                 <button class="popular-card__fav is-active" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav is-active" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav is-active" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav is-active" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
+                </a>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
 <section class="popular popular--slider section-padding" data-aos="fade-up">
     <div class="container">
@@ -238,38 +272,50 @@
 
         <div class="popular__slider">
         <div class="popular__list">
-            <a class="popular-card" href="single.html">
+            <div class="popular-card">
                 <button class="popular-card__fav" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
-            <a class="popular-card" href="single.html">
+                </a>
+            </div>
+            <div class="popular-card">
                 <button class="popular-card__fav" type="button" aria-label="В избранное">
                     <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
                 </button>
-                <img class="popular-card__img" src="assets/img/popular-card-1.jpg" alt="Модель шубы" width="452" height="535">
-                <h3 class="popular-card__title">Модель шубы</h3>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
                 <p class="popular-card__price">$ 1200</p>
-            </a>
+                </a>
+            </div>
         </div>
         </div>
 
@@ -283,67 +329,79 @@
     <div class="container">
         <ul class="faq__list">
             <li class="faq__item" data-aos="fade-up" data-aos-delay="100">
-                <button class="faq__header" type="button" aria-expanded="false">
-                    <h4 class="faq__question section-title">Как отличить натуральную норку от подделки?</h4>
-                    <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
-                </button>
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как отличить натуральную норку от подделки?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
                 <div class="faq__answer">
                     <div class="faq__answer-inner">
-                        <p class="faq__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nulla dui, fringilla sed leo sed, vehicula sollicitudin dui. Mauris finibus ex metus, eu sollicitudin sem vehicula fringilla. Vivamus ut vulputate urna. Nulla non elit nulla. Nullam efficitur neque ut lorem pretium, nec finibus sem accumsan. Integer ipsum diam, mattis vel viverra nec, rutrum quis orci. Sed non urna eget ligula pharetra dictum. Fusce ullamcorper tincidunt sagittis. Praesent at mi vitae sem dapibus maximus ut ut ex.</p>
+                        <p class="faq__text">У натуральной норки мягкая эластичная мездра и живой блеск ворса, густая упругая подпушь; изделие лёгкое и тёплое. Искусственный мех жёстче, ворс одинаковой длины и «стеклянно» блестит. При покупке просите документы и гарантию на изделие.</p>
                     </div>
                 </div>
             </li>
 
             <li class="faq__item" data-aos="fade-up" data-aos-delay="200">
-                <button class="faq__header" type="button" aria-expanded="false">
-                    <h4 class="faq__question section-title">Можно ли примерить перед покупкой?</h4>
-                    <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
-                </button>
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Можно ли примерить перед покупкой?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
                 <div class="faq__answer">
                     <div class="faq__answer-inner">
-                        <p class="faq__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nulla dui, fringilla sed leo sed, vehicula sollicitudin dui. Mauris finibus ex metus, eu sollicitudin sem vehicula fringilla. Vivamus ut vulputate urna. Nulla non elit nulla. Nullam efficitur neque ut lorem pretium, nec finibus sem accumsan. Integer ipsum diam, mattis vel viverra nec, rutrum quis orci. Sed non urna eget ligula pharetra dictum. Fusce ullamcorper tincidunt sagittis. Praesent at mi vitae sem dapibus maximus ut ut ex.</p>
+                        <p class="faq__text">Да. В нашем шоуруме можно примерить любую понравившуюся модель и оценить посадку, цвет и длину. Запишитесь по телефону — заранее подберём варианты под ваш размер и фасон.</p>
                     </div>
                 </div>
             </li>
 
             <li class="faq__item" data-aos="fade-up" data-aos-delay="300">
-                <button class="faq__header" type="button" aria-expanded="false">
-                    <h4 class="faq__question section-title">Как выбрать размер, если я в другом городе?</h4>
-                    <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
-                </button>
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как выбрать размер, если я в другом городе?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
                 <div class="faq__answer">
                     <div class="faq__answer-inner">
-                        <p class="faq__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nulla dui, fringilla sed leo sed, vehicula sollicitudin dui. Mauris finibus ex metus, eu sollicitudin sem vehicula fringilla. Vivamus ut vulputate urna. Nulla non elit nulla. Nullam efficitur neque ut lorem pretium, nec finibus sem accumsan. Integer ipsum diam, mattis vel viverra nec, rutrum quis orci. Sed non urna eget ligula pharetra dictum. Fusce ullamcorper tincidunt sagittis. Praesent at mi vitae sem dapibus maximus ut ut ex.</p>
+                        <p class="faq__text">Снимите мерки (обхват груди, талии, бёдер, длину рукава и изделия) и пришлите нам — поможем с размером. При необходимости отправим дополнительные фото и видео модели, а обмен по размеру согласуем заранее.</p>
                     </div>
                 </div>
             </li>
 
             <li class="faq__item" data-aos="fade-up" data-aos-delay="400">
-                <button class="faq__header" type="button" aria-expanded="false">
-                    <h4 class="faq__question section-title">Даёте ли гарантию и возможен ли возврат?</h4>
-                    <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
-                </button>
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Даёте ли гарантию и возможен ли возврат?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
                 <div class="faq__answer">
                     <div class="faq__answer-inner">
-                        <p class="faq__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nulla dui, fringilla sed leo sed, vehicula sollicitudin dui. Mauris finibus ex metus, eu sollicitudin sem vehicula fringilla. Vivamus ut vulputate urna. Nulla non elit nulla. Nullam efficitur neque ut lorem pretium, nec finibus sem accumsan. Integer ipsum diam, mattis vel viverra nec, rutrum quis orci. Sed non urna eget ligula pharetra dictum. Fusce ullamcorper tincidunt sagittis. Praesent at mi vitae sem dapibus maximus ut ut ex.</p>
+                        <p class="faq__text">На каждое изделие действует гарантия. Возврат и обмен товара надлежащего качества возможны в сроки, установленные законодательством, при сохранении товарного вида, ярлыков и пломб.</p>
                     </div>
                 </div>
             </li>
 
             <li class="faq__item" data-aos="fade-up" data-aos-delay="400">
-                <button class="faq__header" type="button" aria-expanded="false">
-                    <h4 class="faq__question section-title">Как ухаживать за норковой шубой?</h4>
-                    <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
-                </button>
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как ухаживать за норковой шубой?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
                 <div class="faq__answer">
                     <div class="faq__answer-inner">
-                        <p class="faq__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nulla dui, fringilla sed leo sed, vehicula sollicitudin dui. Mauris finibus ex metus, eu sollicitudin sem vehicula fringilla. Vivamus ut vulputate urna. Nulla non elit nulla. Nullam efficitur neque ut lorem pretium, nec finibus sem accumsan. Integer ipsum diam, mattis vel viverra nec, rutrum quis orci. Sed non urna eget ligula pharetra dictum. Fusce ullamcorper tincidunt sagittis. Praesent at mi vitae sem dapibus maximus ut ut ex.</p>
+                        <p class="faq__text">Храните шубу на широких плечиках в дышащем чехле, сушите при комнатной температуре без фена и батарей, снег стряхивайте сразу. Не наносите на мех духи и лак. Раз в 1–2 сезона — профессиональная меховая чистка.</p>
                     </div>
                 </div>
             </li>
         </ul>
     </div>
 </section>
+
+</main>
 
 <footer class="footer">
     <div class="container footer__container">
@@ -373,8 +431,8 @@
 
             <div class="footer__policy">
                 <nav class="footer__policy-links">
-                    <a class="footer__link" href="#">Политика конфиденциальности</a>
-                    <a class="footer__link" href="#">Публичная оферта</a>
+                    <a class="footer__link" href="privacy-policy.html">Политика конфиденциальности</a>
+                    <a class="footer__link" href="terms-and-conditions.html">Публичная оферта</a>
                 </nav>
                 <span class="footer__copyright">MINKA©2026 copyright. Все права защищены.</span>
             </div>
@@ -386,10 +444,10 @@
     </div>
 </footer>
 
-<div class="popup" data-popup-window="showroom">
+<div class="popup" data-popup-window="showroom" role="dialog" aria-modal="true" aria-label="Записаться в шоурум">
     <div class="popup__window">
         <div class="popup__image">
-            <img src="assets/img/popup-card-showroom.jpg" alt="" width="607" height="737">
+            <img src="assets/img/popup-card-showroom.webp" alt="" width="607" height="737">
         </div>
 
         <div class="popup__body" data-lenis-prevent>
@@ -402,11 +460,11 @@
 
             <form class="popup__form">
                 <div class="popup__inputs">
-                    <input class="popup__input" type="text" placeholder="Имя">
-                    <input class="popup__input" type="tel" placeholder="Телефон">
-                    <input class="popup__input" type="text" placeholder="Дата">
-                    <input class="popup__input" type="text" placeholder="Время">
-                    <input class="popup__input" type="text" placeholder="Комментарий">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя">
+                    <input class="popup__input" type="tel" placeholder="Телефон" aria-label="Телефон">
+                    <input class="popup__input" type="text" placeholder="Дата" aria-label="Дата">
+                    <input class="popup__input" type="text" placeholder="Время" aria-label="Время">
+                    <input class="popup__input" type="text" placeholder="Комментарий" aria-label="Комментарий">
                 </div>
 
                 <span class="popup__label">Где с вами связаться?</span>
@@ -436,7 +494,7 @@
                 <label class="popup__check popup__agree">
                     <input class="popup__check-input" type="checkbox" name="agree">
                     <span class="popup__box"></span>
-                    <span>Я соглашаюсь с <a href="#">обработкой персональных данных</a></span>
+                    <span>Я соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
                 </label>
 
                 <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
@@ -444,7 +502,7 @@
         </div>
     </div>
 
-    <div class="popup__thanks">
+    <div class="popup__thanks" role="status" tabindex="-1">
         <h2 class="popup__thanks-title section-title">Спасибо!</h2>
         <span class="popup__thanks-lead">Ваша заявка успешно отправлена.</span>
         <p class="popup__thanks-text">Мы свяжемся с вами в ближайшее время и уточним все детали.</p>
@@ -452,10 +510,10 @@
     </div>
 </div>
 
-<div class="popup" data-popup-window="cta">
+<div class="popup" data-popup-window="cta" role="dialog" aria-modal="true" aria-label="Оставить заявку">
     <div class="popup__window">
         <div class="popup__image">
-            <img src="assets/img/popup-card-showroom.jpg" alt="" width="607" height="737">
+            <img src="assets/img/popup-card-showroom.webp" alt="" width="607" height="737">
         </div>
 
         <div class="popup__body" data-lenis-prevent>
@@ -468,9 +526,9 @@
 
             <form class="popup__form">
                 <div class="popup__inputs">
-                    <input class="popup__input" type="text" placeholder="Имя">
-                    <input class="popup__input" type="tel" placeholder="Телефон">
-                    <input class="popup__input" type="text" placeholder="Комментарий">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя">
+                    <input class="popup__input" type="tel" placeholder="Телефон" aria-label="Телефон">
+                    <input class="popup__input" type="text" placeholder="Комментарий" aria-label="Комментарий">
                 </div>
 
                 <span class="popup__label">Где с вами связаться?</span>
@@ -500,7 +558,7 @@
                 <label class="popup__check popup__agree">
                     <input class="popup__check-input" type="checkbox" name="cta-agree">
                     <span class="popup__box"></span>
-                    <span>Я соглашаюсь с <a href="#">обработкой персональных данных</a></span>
+                    <span>Я соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
                 </label>
 
                 <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
@@ -508,7 +566,7 @@
         </div>
     </div>
 
-    <div class="popup__thanks">
+    <div class="popup__thanks" role="status" tabindex="-1">
         <h2 class="popup__thanks-title section-title">Спасибо!</h2>
         <span class="popup__thanks-lead">Ваша заявка успешно отправлена.</span>
         <p class="popup__thanks-text">Мы свяжемся с вами в ближайшее время и уточним все детали.</p>
@@ -516,10 +574,10 @@
     </div>
 </div>
 
-<div class="popup popup__gift" data-popup-window="gift">
+<div class="popup popup__gift" data-popup-window="gift" role="dialog" aria-modal="true" aria-label="Намекните близкому о подарке">
     <div class="popup__window">
         <div class="popup__image">
-            <img src="assets/img/popular-card-1.jpg" alt="" width="607" height="737">
+            <img src="assets/img/popular-card-1.webp" alt="" width="607" height="737">
         </div>
 
         <div class="popup__body" data-lenis-prevent>
@@ -538,20 +596,20 @@
             <form class="popup__form popup__form--gift">
                 <span class="popup__label">Кому намекнуть</span>
                 <div class="popup__inputs">
-                    <input class="popup__input" type="text" placeholder="Имя" data-fill-source="recipient">
-                    <input class="popup__input" type="email" placeholder="Эл. почта">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя" data-fill-source="recipient">
+                    <input class="popup__input" type="email" placeholder="Эл. почта" aria-label="Эл. почта">
                 </div>
 
                 <span class="popup__label">От кого</span>
                 <div class="popup__inputs">
-                    <input class="popup__input" type="text" placeholder="Имя" data-fill-source="sender">
-                    <input class="popup__input" type="email" placeholder="Эл. почта">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя" data-fill-source="sender">
+                    <input class="popup__input" type="email" placeholder="Эл. почта" aria-label="Эл. почта">
                 </div>
 
                 <label class="popup__check popup__agree">
                     <input class="popup__check-input" type="checkbox" name="agree">
                     <span class="popup__box"></span>
-                    <span>Я соглашаюсь с <a href="#">обработкой персональных данных</a></span>
+                    <span>Я соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
                 </label>
 
                 <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
@@ -559,7 +617,7 @@
         </div>
     </div>
 
-    <div class="popup__thanks">
+    <div class="popup__thanks" role="status" tabindex="-1">
         <h2 class="popup__thanks-title section-title">Спасибо!</h2>
         <span class="popup__thanks-lead">Ваш намёк успешно отправлен.</span>
         <p class="popup__thanks-text">Мы бережно передадим его вашему близкому.</p>
@@ -568,9 +626,9 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="js/main.js"></script>
+<script src="js/aos.js"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/swiper-bundle.min.js"></script>
+<script src="js/just-validate.production.min.js"></script><script src="js/main.js"></script>
 </body>
 </html>

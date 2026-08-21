@@ -37,10 +37,10 @@
 }
 
 .catalog__crumb {
-    transition: all 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 
-.catalog__crumb:hover {
+.catalog__crumb:not(.catalog__crumb--current):hover {
     opacity: 0.6;
 }
 
@@ -80,15 +80,19 @@
     font-size: 20px;
     color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    /* hidden until at least one filter is selected */
+    /* hidden until at least one filter is selected — visibility:hidden also
+       drops it from the tab order so it can't be focused while invisible */
     opacity: 0;
+    visibility: hidden;
     transform: translateX(-8px);
     pointer-events: none;
-    transition: color 0.25s ease, opacity 0.3s ease, transform 0.3s ease;
+    transition: color 0.25s ease, opacity 0.3s ease, transform 0.3s ease,
+        visibility 0.3s ease;
 }
 
 .catalog__clear--visible {
     opacity: 1;
+    visibility: visible;
     transform: translateX(0);
     pointer-events: auto;
 }
@@ -292,6 +296,14 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
+/* the real checkbox is opacity:0, so its keyboard focus ring is invisible —
+   show it on the whole option row instead (:has = the label that contains the
+   focused checkbox) */
+.catalog__option:has(.catalog__checkbox:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
 /* ---- price: dual-handle range slider ---- */
 .catalog__dropdown--price {
     display: block;
@@ -373,6 +385,22 @@
     border: none;
 }
 
+/* each input spans the full track, so its default focus ring wraps the whole
+   slider — put the keyboard ring on the thumb (the square) instead */
+.catalog__range-input:focus-visible {
+    outline: none;
+}
+
+.catalog__range-input:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.catalog__range-input:focus-visible::-moz-range-thumb {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
 .catalog__range-values {
     display: flex;
     justify-content: space-between;
@@ -421,6 +449,14 @@
 }
 
 .catalog__feature .popular-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* the link now wraps img/title/price, so it must carry the card's flex column
+   (desktop) for the feature image to fill the tall card */
+.catalog__feature .popular-card__link {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -499,7 +535,7 @@
     width: 95%;
     height: var(--fixed-vh, 100vh);
     overflow-y: auto;
-    overscroll-behavior: contain;
+    overscroll-behavior: none;
     background-color: #fff;
     transform: translateX(-101%);
     transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
@@ -602,6 +638,14 @@
     gap: 14px;
     margin-top: 0;
     margin-left: 14px;
+    /* collapsed accordions clip to 0 height but their options stay in the tab
+       order — hide them so Tab skips a collapsed section's variants */
+    visibility: hidden;
+    transition: visibility 0.35s ease;
+}
+
+.filters-acc.is-open .filters-acc__inner {
+    visibility: visible;
 }
 
 .filters-acc--price .filters-acc__inner {
@@ -620,20 +664,23 @@
     font-size: 16px;
     color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    /* hidden (and collapsed, so no gap above Применить) until a filter is set */
+    /* hidden (and collapsed, so no gap above Применить) until a filter is set;
+       visibility:hidden also keeps it out of the tab order while invisible */
     max-height: 0;
     margin-bottom: 0;
     opacity: 0;
+    visibility: hidden;
     overflow: hidden;
     pointer-events: none;
     transition: max-height 0.3s ease, margin-bottom 0.3s ease,
-        opacity 0.3s ease, color 0.25s ease;
+        opacity 0.3s ease, color 0.25s ease, visibility 0.3s ease;
 }
 
 .filters__clear--visible {
     max-height: 30px;
     margin-bottom: 10px;
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
 }
 

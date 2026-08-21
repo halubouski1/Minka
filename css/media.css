@@ -141,9 +141,10 @@
         height: 18px;
     }
 
-    .popular-card__img {
+    .popular-card__img, .popular-card__media {
         margin-bottom: 8px;
     }
+
 
     .popular-card__title {
         font-size: 18px;
@@ -518,6 +519,14 @@
         margin-bottom: 32px;
     }
 
+    .popup__error {
+        font-size: 15px;
+    }
+
+    .popup__agree .popup__check-input.popup__input--invalid + .popup__box {
+        box-shadow: rgb(0, 0, 0) 0px 0px 0px 1px;
+    }
+
     .popup__box::after {
         width: 8px;
         height: 8px;
@@ -541,6 +550,26 @@
         font-size: 15px;
         max-width: 290px;
         margin-bottom: 28px;
+    }
+
+    /* cookie banner — base values scaled by 0.75 */
+    .cookie__window {
+        max-width: 735px;
+        padding: 39px 33px;
+        transform: translateY(30px);
+    }
+
+    .cookie__title {
+        margin-bottom: 15px;
+    }
+
+    .cookie__desc {
+        margin-bottom: 22.5px;
+        font-size: 18px;
+    }
+
+    .cookie__actions {
+        gap: 15px;
     }
 }
 
@@ -648,7 +677,20 @@
         column-gap: 10px;
     }
 
-    .popular-card__img {
+    .popular-card__img--hover {
+        display: none;
+    }
+
+    /* the link wraps img/title/price — dissolve its box so they become grid
+       items of the card again and the grid-template-areas above place them */
+    .popular-card__link {
+        display: contents;
+    }
+
+    /* the image itself (product cards) or its wrapper (article cards) takes the
+       image grid cell */
+    .popular-card__img,
+    .popular-card__media {
         grid-area: img;
     }
 
@@ -715,6 +757,7 @@
     .footer__policy-links {
         max-width: 200px;
         gap: 8px;
+        align-items: end;
     }
 
     .footer__policy-links .footer__link {
@@ -723,6 +766,17 @@
 
     .popup__image {
         display: none;
+    }
+
+    /* cookie */
+    .cookie__window {
+        max-width: 100%;
+    }
+
+    .cookie__desc {
+        max-width: 460px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -882,7 +936,7 @@
     /* .hero */
     .hero {
         padding-bottom: 20px;
-        background: url(../assets/img/hero-mob-bg.png) center left 49% / cover no-repeat;
+        background: url(../assets/img/hero-mob-bg.webp) center left 49% / cover no-repeat;
     }
 
     .hero__content {
@@ -1357,6 +1411,22 @@
         margin-right: auto;
     }
 
+    .popup__error {
+        font-size: 14px;
+    }
+
+    .popup__field .popup__error {
+        top: 2px;
+    }
+
+    .popup__group-error {
+        max-width: 130px;
+    }
+
+    .popup__field .popup__error {
+            max-width: 70%;
+    }
+
     .popup__input {
         font-size: 16px;
         padding-bottom: 6px;
@@ -1409,5 +1479,23 @@
         font-size: 13px;
         max-width: 250px;
         margin-bottom: 16px;
+    }
+
+    /* cookie */
+    .cookie__window {
+        padding: 20px;
+    }
+
+    .cookie__desc {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .cookie__title {
+        margin-bottom: 4px;
+    }
+
+    .cookie__actions {
+        gap: 10px;
     }
 }

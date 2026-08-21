@@ -67,6 +67,11 @@
     .buy__step {
         flex: 0 1 235px;
     }
+
+    /* cta */
+    .cta__desc {
+            max-width: 519px;
+    }
 }
 
 @media (max-width: 1300px) {

@@ -47,6 +47,7 @@
 
     .about__desc {
         margin-bottom: 96px;
+        max-width: 429px;
     }
 
     .about__left .about__img {
@@ -222,6 +223,7 @@
 
     .about__num {
         font-size: 60px;
+        letter-spacing: -2px;
     }
 
     .about__label {

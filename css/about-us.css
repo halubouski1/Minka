@@ -43,10 +43,10 @@
 }
 
 .catalog__crumb {
-    transition: all 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 
-.catalog__crumb:hover {
+.catalog__crumb:not(.catalog__crumb--current):hover {
     opacity: 0.6;
 }
 

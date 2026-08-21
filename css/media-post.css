@@ -23,8 +23,13 @@
     }
 
     .post h2 {
-        font-size: 20px;
+        font-size: 22px;
         margin-bottom: 15px;
+    }
+
+    .post h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
     }
 
     .post p {
@@ -47,6 +52,21 @@
 
     .post__caption {
         font-size: 16px;
+    }
+
+    /* table — all base values scaled by 0.75 */
+    .post__table-wrap {
+        margin-bottom: 22.5px;
+    }
+
+    .post__table {
+        min-width: 480px;
+    }
+
+    .post__table th,
+    .post__table td {
+        padding: 13.5px;
+        font-size: 13.5px;
     }
 
     /* popular */
@@ -96,7 +116,12 @@
     }
 
     .post h2 {
-        font-size: 16px;
+        font-size: 17px;
+        margin-bottom: 4px;
+    }
+
+    .post h3 {
+        font-size: 15px;
         margin-bottom: 4px;
     }
 
@@ -125,6 +150,24 @@
 
     .post__caption {
         font-size: 12px;
+    }
+
+    /* auto layout + per-cell min-width so every column stays >= 155px
+       and the wrapper scrolls horizontally when they don't fit */
+    .post__table {
+        table-layout: auto;
+        min-width: 0;
+    }
+
+    .post__table th,
+    .post__table td {
+        min-width: 175px;
+        padding: 15px;
+        font-size: 13px;
+    }
+
+    .post__table-wrap {
+        margin-bottom: 20px;
     }
 
     .popular {

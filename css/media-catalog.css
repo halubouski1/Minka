@@ -103,6 +103,12 @@
         display: grid;
     }
 
+    /* grid card here (not the desktop flex column), so dissolve the link again
+       to let img/title/price be grid items */
+    .catalog__feature .popular-card__link {
+        display: contents;
+    }
+
     .catalog__row {
         flex-direction: column;
     }

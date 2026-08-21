@@ -19,13 +19,55 @@ if (typeof Lenis !== 'undefined') {
 // ========================================
 // Page scroll lock (while an overlay is open)
 // ========================================
+let lockedScrollY = 0;
 const lockScroll = () => {
+  if (document.documentElement.classList.contains('is-locked')) return;
+  // pin the page at its current offset so focusing an input can't scroll the
+  // background (iOS scrolls a focused input into view, ignoring overflow:hidden)
+  lockedScrollY = window.scrollY;
   document.documentElement.classList.add('is-locked');
+  document.body.style.top = `-${lockedScrollY}px`;
   if (lenis) lenis.stop();
 };
 const unlockScroll = () => {
+  if (!document.documentElement.classList.contains('is-locked')) return;
   document.documentElement.classList.remove('is-locked');
+  document.body.style.top = '';
+  window.scrollTo(0, lockedScrollY);
   if (lenis) lenis.start();
+};
+
+// ========================================
+// Keyboard focus containment for overlays (menu / search / popups)
+// ========================================
+// Closed overlays are only hidden visually — their links stay in the tab order,
+// so Tab "falls into" the hidden menu instead of moving to the next visible
+// link. Mark closed overlays `inert` (skipped by Tab). While one is open, mark
+// the rest of the page `inert` too, so focus cycles only inside the open panel.
+const overlayPanels = document.querySelectorAll('#menu, #search, #filters, .popup:not(.popup--inline)');
+overlayPanels.forEach((panel) => panel.setAttribute('inert', ''));
+
+let overlayTrigger = null;
+const openOverlayFocus = (panel, ...keepActive) => {
+  // remember what opened the overlay so focus can return to it on close
+  overlayTrigger = document.activeElement;
+  panel.removeAttribute('inert');
+  Array.from(document.body.children).forEach((el) => {
+    if (el === panel || keepActive.includes(el)) return;
+    if (['SCRIPT', 'STYLE', 'LINK'].includes(el.tagName)) return;
+    el.setAttribute('inert', '');
+  });
+};
+
+const closeOverlayFocus = () => {
+  Array.from(document.body.children).forEach((el) => el.removeAttribute('inert'));
+  overlayPanels.forEach((panel) => panel.setAttribute('inert', ''));
+  // return focus to the trigger (e.g. the "Меню" button) so Tab continues in
+  // header order — Поиск, Избранное … — instead of jumping past it into the page
+  if (overlayTrigger && typeof overlayTrigger.focus === 'function') {
+    overlayTrigger.focus();
+  }
+  overlayTrigger = null;
 };
 
 // ========================================
@@ -67,12 +109,14 @@ if (menu && menuOpenBtn) {
     menu.classList.add('active');
     if (menuOverlay) menuOverlay.classList.add('active');
     lockScroll();
+    openOverlayFocus(menu, menuOverlay);
   };
 
   const closeMenu = () => {
     menu.classList.remove('active');
     if (menuOverlay) menuOverlay.classList.remove('active');
     unlockScroll();
+    closeOverlayFocus();
   };
 
   menuOpenBtn.addEventListener('click', openMenu);
@@ -125,14 +169,20 @@ if (menu && menuOpenBtn) {
     // Always open on the form state, with fields cleared
     popup.classList.remove('submitted');
     const form = popup.querySelector('.popup__form');
-    if (form) form.reset();
+    if (form) {
+      form.reset();
+      const v = validators.get(form);
+      if (v) v.clearErrors(); // drop any errors left from a previous attempt
+    }
     popup.classList.add('active');
     lockScroll();
+    openOverlayFocus(popup);
   };
 
   const closePopups = () => {
     popups.forEach((p) => p.classList.remove('active'));
     unlockScroll();
+    closeOverlayFocus();
   };
 
   document.querySelectorAll('[data-popup]').forEach((trigger) => {
@@ -157,14 +207,115 @@ if (menu && menuOpenBtn) {
     if (e.key === 'Escape' && document.querySelector('.popup.active')) closePopups();
   });
 
-  // On submit: don't reload, swap the form for the thank-you message
-  document.querySelectorAll('.popup__form').forEach((form) => {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const popup = form.closest('.popup');
-      if (popup) popup.classList.add('submitted');
-    });
+  // native radios/checkboxes respond to Space only — also let Enter toggle the
+  // focused option (preventDefault so Enter doesn't submit the form instead)
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || !e.target.classList?.contains('popup__check-input')) return;
+    e.preventDefault();
+    e.target.click();
   });
+
+  // ---- Form validation (JustValidate) ----
+  let jvCounter = 0;
+  const validators = new Map();
+
+  const setupValidation = (form) => {
+    if (typeof JustValidate === 'undefined') {
+      // library missing → fall back to the simple "show thanks on submit"
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const popup = form.closest('.popup');
+        if (popup) popup.classList.add('submitted');
+      });
+      return;
+    }
+
+    const validator = new ValidatorClass(form, {
+      // library defaults to red text + a red field border (applied inline) —
+      // override to stay monochrome; layout comes from the CSS class below
+      errorLabelStyle: { color: '#000' },
+      errorFieldStyle: {},
+      errorLabelCssClass: 'popup__error',
+      errorFieldCssClass: 'popup__input--invalid',
+    });
+
+    form.querySelectorAll('.popup__input').forEach((input) => {
+      if (/коммент|дата|время/i.test(input.placeholder || '')) return; // Комментарий / Дата / Время — optional
+
+      if (!input.id) input.id = `jv-field-${++jvCounter}`;
+
+      // wrap the input so its error can sit inline on the right of its line
+      const field = document.createElement('div');
+      field.className = 'popup__field';
+      input.parentNode.insertBefore(field, input);
+      field.appendChild(input);
+
+      const rules = [{ rule: 'required', errorMessage: 'Заполните это поле!' }];
+      if (input.type === 'tel') {
+        rules.push({
+          rule: 'customRegexp',
+          value: /^[+\d][\d\s()\-]{5,}$/,
+          errorMessage: 'Введите корректный номер',
+        });
+      }
+      validator.addField(`#${input.id}`, rules, { errorsContainer: field });
+    });
+
+    // target by structure, not name="agree" — some markup is missing that attr
+    const agree = form.querySelector('.popup__agree .popup__check-input');
+    if (agree) {
+      if (!agree.id) agree.id = `jv-field-${++jvCounter}`;
+      const box = document.createElement('div');
+      box.className = 'popup__agree-error';
+      (agree.closest('.popup__agree') || agree).before(box); // above the checkbox
+      validator.addField(`#${agree.id}`, [
+        { rule: 'required', errorMessage: 'Подтвердите согласие на обработку данных' },
+      ], { errorsContainer: box });
+    }
+
+    // contact-method radios: at least one must be picked; error on the label line
+    const contactGroup = form.querySelector('.popup__checks');
+    if (contactGroup) {
+      const label = contactGroup.previousElementSibling;
+      const box = document.createElement('div');
+      box.className = 'popup__group-error';
+      if (label && label.classList.contains('popup__label')) {
+        label.appendChild(box);
+      } else {
+        contactGroup.before(box);
+      }
+      validator.addRequiredGroup(
+        contactGroup,
+        'Заполните это поле!',
+        { errorsContainer: box }
+      );
+    }
+
+    // valid → swap the form for the thank-you message (same as before)
+    validator.onSuccess(() => {
+      const popup = form.closest('.popup');
+      if (popup) {
+        popup.classList.add('submitted');
+        // move focus to the confirmation so screen readers announce it
+        popup.querySelector('.popup__thanks')?.focus({ preventScroll: true });
+      }
+    });
+
+    validators.set(form, validator);
+  };
+
+  // Subclass so fields re-validate on blur/change instead of on every keystroke.
+  // JustValidate re-renders (clears + re-inserts) all error labels on each input
+  // event once submitted, which restarts the reveal animation on every symbol.
+  const ValidatorClass = typeof JustValidate !== 'undefined'
+    ? class extends JustValidate {
+        getListenerType() {
+          return 'change';
+        }
+      }
+    : null;
+
+  document.querySelectorAll('.popup__form').forEach(setupValidation);
 })();
 
 // ========================================
@@ -225,6 +376,7 @@ if (searchPanel && searchOpenBtn) {
     searchPanel.classList.add('active');
     if (searchOverlay) searchOverlay.classList.add('active');
     lockScroll();
+    openOverlayFocus(searchPanel, searchOverlay);
     if (searchInput) setTimeout(() => searchInput.focus(), 350);
   };
 
@@ -232,6 +384,7 @@ if (searchPanel && searchOpenBtn) {
     searchPanel.classList.remove('active');
     if (searchOverlay) searchOverlay.classList.remove('active');
     unlockScroll();
+    closeOverlayFocus();
   };
 
   searchOpenBtn.addEventListener('click', openSearch);
@@ -419,6 +572,8 @@ if (catalogGrid && catalogMore) {
     const hiddenRows = catalogGrid.querySelectorAll('.catalog__row--hidden');
     if (!hiddenRows.length) return;
 
+    const firstNewRow = hiddenRows[0];
+
     hiddenRows.forEach((row) => {
       row.classList.remove('catalog__row--hidden'); // now takes layout...
       row.classList.add('catalog__row--enter');     // ...but starts invisible
@@ -433,6 +588,24 @@ if (catalogGrid && catalogMore) {
 
     // nothing left to reveal → drop the button
     catalogMore.remove();
+
+    // the button (which had focus) is gone — move focus to the first newly
+    // revealed item so keyboard users continue from there, not from <body>.
+    // preventScroll: it sits where the button was (already in view) and avoids
+    // a native jump fighting Lenis.
+    const firstItem = firstNewRow.querySelector('a, button, input, [tabindex]:not([tabindex="-1"])');
+    if (firstItem) firstItem.focus({ preventScroll: true });
+
+    // announce to screen readers that more products appeared
+    let live = document.getElementById('catalog-live');
+    if (!live) {
+      live = document.createElement('div');
+      live.id = 'catalog-live';
+      live.className = 'sr-only';
+      live.setAttribute('aria-live', 'polite');
+      document.body.appendChild(live);
+    }
+    live.textContent = 'Показаны дополнительные модели';
   });
 }
 
@@ -444,8 +617,17 @@ const blogMore = document.querySelector('.blog__more');
 
 if (blogGrid && blogMore) {
   blogMore.addEventListener('click', () => {
+    // capped cards are display:none, so the first hidden one is the first that
+    // will appear once expanded
+    const firstHidden = Array.from(blogGrid.querySelectorAll('.blog__card'))
+      .find((card) => card.offsetParent === null);
+
     blogGrid.classList.add('is-expanded');
     blogMore.remove();
+
+    // move focus to it (the card is itself the <a>) so keyboard users continue
+    // from the new posts instead of losing focus when the button is removed
+    if (firstHidden) firstHidden.focus({ preventScroll: true });
   });
 }
 
@@ -455,6 +637,14 @@ if (blogGrid && blogMore) {
 const catalogFilters = document.querySelectorAll('.catalog__filter');
 
 if (catalogFilters.length) {
+  // keep each toggle's aria-expanded in sync with its open/closed state
+  const syncFilterAria = () => {
+    catalogFilters.forEach((f) => {
+      const b = f.querySelector('.catalog__filter-btn');
+      if (b) b.setAttribute('aria-expanded', f.classList.contains('is-open'));
+    });
+  };
+
   catalogFilters.forEach((filter) => {
     const btn = filter.querySelector('.catalog__filter-btn');
     const dropdown = filter.querySelector('.catalog__dropdown');
@@ -465,6 +655,7 @@ if (catalogFilters.length) {
       const wasOpen = filter.classList.contains('is-open');
       catalogFilters.forEach((f) => f.classList.remove('is-open'));
       if (!wasOpen) filter.classList.add('is-open');
+      syncFilterAria();
     });
 
     // clicking the checkboxes shouldn't close the dropdown
@@ -474,9 +665,22 @@ if (catalogFilters.length) {
   // click outside or Escape closes any open filter
   document.addEventListener('click', () => {
     catalogFilters.forEach((f) => f.classList.remove('is-open'));
+    syncFilterAria();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') catalogFilters.forEach((f) => f.classList.remove('is-open'));
+    if (e.key === 'Escape') {
+      catalogFilters.forEach((f) => f.classList.remove('is-open'));
+      syncFilterAria();
+    }
+  });
+
+  // native checkboxes toggle on Space only — also let Enter check/uncheck an
+  // option, firing change so the count badge and clear button stay in sync
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || !e.target.classList?.contains('catalog__checkbox')) return;
+    e.preventDefault();
+    e.target.checked = !e.target.checked;
+    e.target.dispatchEvent(new Event('change', { bubbles: true }));
   });
 
   // sort: single choice — mark it active and close the dropdown
@@ -484,12 +688,16 @@ if (catalogFilters.length) {
     option.addEventListener('click', () => {
       const dropdown = option.closest('.catalog__dropdown');
       if (dropdown) {
-        dropdown.querySelectorAll('.catalog__sort-option').forEach((o) =>
-          o.classList.remove('catalog__sort-option--active'));
+        dropdown.querySelectorAll('.catalog__sort-option').forEach((o) => {
+          o.classList.remove('catalog__sort-option--active');
+          o.removeAttribute('aria-current');
+        });
       }
       option.classList.add('catalog__sort-option--active');
+      option.setAttribute('aria-current', 'true');
       const filter = option.closest('.catalog__filter');
       if (filter) filter.classList.remove('is-open');
+      syncFilterAria();
     });
   });
 
@@ -581,11 +789,13 @@ if (filtersPanel && filtersOpenBtn) {
     filtersPanel.classList.add('active');
     if (filtersOverlay) filtersOverlay.classList.add('active');
     lockScroll();
+    openOverlayFocus(filtersPanel, filtersOverlay);
   };
   const closeFilters = () => {
     filtersPanel.classList.remove('active');
     if (filtersOverlay) filtersOverlay.classList.remove('active');
     unlockScroll();
+    closeOverlayFocus();
   };
 
   filtersOpenBtn.addEventListener('click', openFilters);
@@ -600,7 +810,7 @@ if (filtersPanel && filtersOpenBtn) {
   filtersPanel.querySelectorAll('.filters-acc__btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const acc = btn.closest('.filters-acc');
-      if (acc) acc.classList.toggle('is-open');
+      if (acc) btn.setAttribute('aria-expanded', acc.classList.toggle('is-open'));
     });
   });
 }
@@ -722,3 +932,17 @@ document.querySelectorAll('.catalog__range').forEach((range) => {
 
   update();
 });
+
+/* Cookie consent banner — layout only for now (no persisted consent):
+   show on load, close on Принять / Отклонить. Runs only where #cookie exists. */
+(function () {
+  const cookie = document.getElementById('cookie');
+  if (!cookie) return;
+
+  // reveal a moment after load so it eases in gently, not on first paint
+  setTimeout(() => cookie.classList.add('is-open'), 1000);
+
+  cookie.querySelectorAll('[data-cookie-close]').forEach((btn) => {
+    btn.addEventListener('click', () => cookie.classList.remove('is-open'));
+  });
+})();
