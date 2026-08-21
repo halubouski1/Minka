@@ -527,10 +527,12 @@ ul {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* reveal on hover, and on keyboard focus of the card link or the heart itself
-   (focus-within covers both) — so the heart is visible and reachable by Tab */
+/* reveal on hover, and on KEYBOARD focus of the card link or the heart itself
+   (:has(:focus-visible), not :focus-within) — so Tab users can see/reach it, but
+   a mouse click on the heart doesn't leave it stuck visible after the pointer
+   moves away (mouse focus isn't focus-visible) */
 .popular-card:hover .popular-card__fav,
-.popular-card:focus-within .popular-card__fav {
+.popular-card:has(:focus-visible) .popular-card__fav {
     opacity: 1;
     visibility: visible;
 }
@@ -1567,6 +1569,163 @@ ul {
 
 .search__clear:hover {
     color: #000;
+}
+
+/* ==========================================================================
+   Search — suggestions dropdown + results grid
+   ========================================================================== */
+/* box wraps the form so the suggestions can anchor right under the input
+   without the form's large bottom gap pushing them down */
+.search__box {
+    position: relative;
+    z-index: 5; /* keep the dropdown stacked above the results grid below */
+    max-width: 606px;
+    margin: 0 auto 167px;
+}
+
+.search__box .search__form {
+    max-width: none;
+    margin: 0;
+}
+
+/* floating autocomplete panel: solid white with a cap on height so a long list
+   scrolls inside itself instead of spilling down over the result cards */
+.search__suggest {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 15px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 18px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
+.search__suggest.is-open {
+    display: flex;
+}
+
+.search__suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: 20px;
+    text-align: left;
+    color: #000;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+/* one highlight for both mouse hover and keyboard (is-active) */
+.search__suggest-item:hover,
+.search__suggest-item.is-active {
+    opacity: 0.6;
+}
+
+.search__suggest-item img {
+    flex-shrink: 0;
+    width: 11px;
+    height: 11px;
+}
+
+/* "nothing found" message — 40px below the input; absolute so it doesn't change
+   the box height (keeps the suggestions anchored right under the field) */
+.search__empty {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 40px;
+    display: none;
+    text-align: center;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.search__empty.is-visible {
+    display: block;
+    animation: search-fade-up 0.3s ease both;
+}
+
+/* results state: swap the "may be interesting" slider for the results grid */
+.search__results {
+    display: none;
+}
+
+.search.has-results .search__popular {
+    display: none;
+}
+
+.search.has-results .search__results {
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* "Очистить": fade the results out before swapping back to the slider */
+.search.has-results .search__results.is-leaving {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* and fade the "may be interesting" block back in once it returns */
+.search__popular.is-entering {
+    animation: search-fade-up 0.4s ease both;
+}
+
+/* reuses .hero__availability + .popular__link styling, with hover cancelled */
+.search__count {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-align: left;
+    cursor: default;
+}
+
+.search__count:hover {
+    opacity: 1;
+}
+
+.search__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 20px;
+}
+
+/* entrance animations for the suggestions, count and result cards */
+@keyframes search-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search__suggest.is-open .search__suggest-item {
+    /* backwards (not both): applies the start frame during the stagger delay to
+       avoid a flash, but releases the properties after the animation ends so the
+       :hover / .is-active opacity works */
+    animation: search-fade-up 0.3s ease backwards;
+    animation-delay: calc(var(--d, 0) * 0.05s);
+}
+
+.search.has-results .search__count {
+    animation: search-fade-up 0.35s ease both;
+}
+
+.search__grid .popular-card {
+    animation: search-fade-up 0.4s ease both;
+    animation-delay: calc(0.1s + var(--d, 0) * 0.06s);
 }
 
 /* ==========================================================================

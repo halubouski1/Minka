@@ -115,7 +115,7 @@
                 <span>Поиск</span>
             </button>
             <a class="header__btn header__btn--favorites" href="favorites.html">
-                <img src="assets/icons/favorites.svg" alt="" width="10" height="10">
+                <img src="assets/icons/favorites.svg" alt="" width="12" height="12">
                 <span>Избранное</span>
             </a>
         </div>
@@ -195,12 +195,21 @@
                 <img src="assets/icons/logo-dark.svg" alt="MINKA" width="261" height="47">
             </a>
 
-            <form class="search__form" role="search">
-                <input class="search__input" type="search" placeholder="Начните искать" aria-label="Поиск по каталогу">
-                <button class="search__clear" type="button" data-search-clear>Очистить</button>
-            </form>
+            <div class="search__box">
+                <form class="search__form" role="search">
+                    <input class="search__input" type="text" placeholder="Начните искать" aria-label="Поиск по каталогу" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="searchSuggest" aria-autocomplete="list">
+                    <button class="search__clear" type="button" data-search-clear>Очистить</button>
+                </form>
+                <div class="search__suggest" id="searchSuggest" role="listbox" aria-label="Варианты поиска"></div>
+                <p class="search__empty" role="status" aria-live="polite"></p>
+            </div>
 
-            <div class="popular popular--slider">
+            <div class="search__results">
+                <p class="hero__availability popular__link search__count" aria-live="polite" aria-atomic="true">435 результатов</p>
+                <div class="search__grid"></div>
+            </div>
+
+            <div class="popular popular--slider search__popular">
                 <div class="popular__top">
                     <h2 class="popular__title section-title">Может быть интересно</h2>
                     <a class="hero__availability popular__link" href="catalog.html">Смотреть каталог</a>

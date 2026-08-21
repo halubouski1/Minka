@@ -405,6 +405,204 @@ if (searchPanel && searchOpenBtn) {
 }
 
 // ========================================
+// Search — suggestions + results (demo, no backend yet)
+// ========================================
+(function () {
+  const panel = document.getElementById('search');
+  if (!panel) return;
+  const input = panel.querySelector('.search__input');
+  const suggest = panel.querySelector('.search__suggest');
+  const grid = panel.querySelector('.search__grid');
+  const count = panel.querySelector('.search__count');
+  const empty = panel.querySelector('.search__empty');
+  const clearBtn = panel.querySelector('[data-search-clear]');
+  if (!input || !suggest || !grid) return;
+
+  // demo dataset — swap for real model names when there's a backend
+  const MODELS = ['Елена', 'Еленина', 'Елука2', 'Милана', 'Виктория', 'Астра', 'Флоренция', 'Модель шубы'];
+
+  // how many result cards to render per search (demo)
+  const RESULTS_COUNT = 8;
+
+  // Russian plural for "результат": 1 → результат, 2-4 → результата, else → результатов
+  const plural = (n) => {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return 'результат';
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'результата';
+    return 'результатов';
+  };
+
+  // i drives the staggered entrance animation (--d)
+  const cardHTML = (i) => `
+    <div class="popular-card" style="--d:${i}">
+      <button class="popular-card__fav" type="button" aria-label="В избранное">
+        <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+      </button>
+      <a class="popular-card__link" href="single.html">
+        <img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+        <img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+        <p class="popular-card__title">Модель шубы</p>
+        <p class="popular-card__price">$ 1200</p>
+      </a>
+    </div>`;
+
+  // combobox active-option tracking (keyboard highlight + aria-activedescendant)
+  let activeIndex = -1;
+
+  const options = () => Array.from(suggest.querySelectorAll('.search__suggest-item'));
+
+  const setActive = (i) => {
+    const opts = options();
+    activeIndex = i;
+    opts.forEach((o, idx) => {
+      const on = idx === i;
+      o.classList.toggle('is-active', on);
+      o.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if (i >= 0 && opts[i]) {
+      input.setAttribute('aria-activedescendant', opts[i].id);
+      opts[i].scrollIntoView({ block: 'nearest' });
+    } else {
+      input.removeAttribute('aria-activedescendant');
+    }
+  };
+
+  const closeSuggest = () => {
+    suggest.classList.remove('is-open');
+    suggest.innerHTML = '';
+    activeIndex = -1;
+    input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
+  };
+
+  const hideEmpty = () => {
+    if (empty) empty.classList.remove('is-visible');
+  };
+
+  // nothing matched: keep the "may be interesting" block, show a message
+  const showEmpty = (term) => {
+    panel.classList.remove('has-results');
+    grid.innerHTML = '';
+    if (empty) {
+      empty.textContent = `По запросу "${term}" ничего не найдено`;
+      empty.classList.add('is-visible');
+    }
+  };
+
+  const renderResults = () => {
+    hideEmpty();
+    grid.innerHTML = Array.from({ length: RESULTS_COUNT }, (_, i) => cardHTML(i)).join('');
+    const n = grid.children.length;
+    if (count) count.textContent = `${n} ${plural(n)}`;
+    panel.classList.add('has-results');
+  };
+
+  const apply = (term) => {
+    input.value = term;
+    closeSuggest();
+    if (MODELS.some((m) => m.toLowerCase().includes(term.toLowerCase()))) {
+      renderResults();
+    } else {
+      showEmpty(term);
+    }
+  };
+
+  input.addEventListener('input', () => {
+    hideEmpty();
+    const q = input.value.trim().toLowerCase();
+    if (!q) return closeSuggest();
+    const matches = MODELS.filter((m) => m.toLowerCase().includes(q)).slice(0, 6);
+    if (!matches.length) return closeSuggest();
+    suggest.innerHTML = matches.map((m, i) =>
+      `<div class="search__suggest-item" role="option" id="search-opt-${i}" aria-selected="false" style="--d:${i}">
+         <img src="assets/icons/search.svg" alt="" width="12" height="12">
+         <span>${m}</span>
+       </div>`).join('');
+    suggest.classList.add('is-open');
+    input.setAttribute('aria-expanded', 'true');
+    setActive(-1);
+  });
+
+  suggest.addEventListener('click', (e) => {
+    const item = e.target.closest('.search__suggest-item');
+    if (item) apply(item.textContent.trim());
+  });
+
+  // hover syncs the active option so mouse and keyboard highlight stay in sync
+  suggest.addEventListener('mousemove', (e) => {
+    const item = e.target.closest('.search__suggest-item');
+    if (item) setActive(options().indexOf(item));
+  });
+
+  // combobox keyboard: ↑/↓ move the highlight, Enter picks it, Esc closes the list
+  input.addEventListener('keydown', (e) => {
+    const opts = options();
+    const open = suggest.classList.contains('is-open') && opts.length > 0;
+    if (e.key === 'ArrowDown') {
+      if (!open) return;
+      e.preventDefault();
+      setActive((activeIndex + 1) % opts.length);
+    } else if (e.key === 'ArrowUp') {
+      if (!open) return;
+      e.preventDefault();
+      setActive((activeIndex - 1 + opts.length) % opts.length);
+    } else if (e.key === 'Enter') {
+      if (open && activeIndex >= 0) {
+        e.preventDefault();
+        apply(opts[activeIndex].textContent.trim());
+      }
+      // otherwise the form's submit handler applies the typed term
+    } else if (e.key === 'Escape') {
+      if (open) {
+        e.preventDefault();
+        e.stopPropagation(); // close only the list, not the whole search panel
+        closeSuggest();
+      }
+    }
+  });
+
+  // Enter in the field (no option highlighted) applies the typed text as a search
+  input.closest('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const term = input.value.trim();
+    if (term) apply(term);
+  });
+
+  // smoothly fade the results out, then bring back the "may be interesting" block
+  const results = panel.querySelector('.search__results');
+  const popular = panel.querySelector('.search__popular');
+
+  const resetToDefault = () => {
+    closeSuggest();
+    hideEmpty();
+    if (!panel.classList.contains('has-results')) return;
+
+    results.classList.add('is-leaving');
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      panel.classList.remove('has-results');
+      results.classList.remove('is-leaving');
+      grid.innerHTML = '';
+      if (popular) {
+        popular.classList.add('is-entering');
+        popular.addEventListener('animationend', () => popular.classList.remove('is-entering'), { once: true });
+      }
+    };
+
+    results.addEventListener('transitionend', finish, { once: true });
+    setTimeout(finish, 400); // fallback if transitionend doesn't fire
+  };
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', resetToDefault);
+  }
+})();
+
+// ========================================
 // Favorite buttons (product cards)
 // ========================================
 // delegated so dynamically added cards (e.g. catalog "show more") work too
