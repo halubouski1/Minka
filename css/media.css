@@ -386,7 +386,7 @@
 
     .menu__close {
         top: 37px;
-        right: 30px;
+        left: 30px;
         width: 13px;
         height: 13px;
     }
@@ -433,7 +433,7 @@
 
     .search__close {
         top: 37px;
-        right: 30px;
+        left: 30px;
     }
 
     .search__close img {

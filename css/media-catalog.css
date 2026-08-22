@@ -120,6 +120,9 @@
 
     .catalog__filters-toggle {
         display: inline-flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 6px;
     }
 
     .filters,
@@ -143,6 +146,10 @@
     .catalog__sort-chevron {
         display: inline-block;
     }
+
+    .catalog__sort-filters {
+        margin-top: 2px;
+    }
     
 }
 
@@ -163,11 +170,12 @@
 
     .catalog__filters-toggle {
         font-size: 14px;
+        gap: 4px;
     }
 
     .catalog__filter-btn, .catalog__sort {
         font-size: 14px;
-        gap: 2px;
+        gap: 3px;
     }
 
     .catalog__sort-chevron {
@@ -236,6 +244,12 @@
     .filters-acc__chevron {
         width: 7px;
         height: auto;
+    }
+
+    .catalog__sort-filters {
+        width: 9px;
+        height: auto;
+        margin-top: 2px;
     }
 
     .catalog__option:first-child {

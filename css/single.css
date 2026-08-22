@@ -238,18 +238,14 @@
     color: #000;
 }
 
-/* the fill-in-the-blank that mirrors the name fields as you type */
+/* the fill-in-the-blank that mirrors the name fields as you type — no min-width,
+   so it grows with the typed content instead of holding a fixed blank */
 .popup__fill {
     display: inline-block;
-    min-width: 130px;
     padding: 0 6px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     text-align: center;
     line-height: 1.2;
-}
-
-.popup__fill--wide {
-    min-width: 200px;
 }
 
 /* spacing: label → 20px → inputs → 40px → next group */

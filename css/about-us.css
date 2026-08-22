@@ -166,12 +166,16 @@
     gap: 26px;
 }
 
+.about__label-br {
+    display: none;
+}
+
 .about__num {
     font-family: 'Arapey', Helvetica, Arial, sans-serif;
     font-weight: 400;
     font-size: 105px;
     line-height: 0.7;
-    letter-spacing: -5px;
+    letter-spacing: -3px;
     text-transform: uppercase;
     color: rgba(0, 0, 0, 0.2);
 }

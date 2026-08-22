@@ -101,14 +101,6 @@
     .popup__form--gift .popup__inputs {
         margin-bottom: 30px;
     }
-
-    .popup__fill {
-        min-width: 110px;
-    }
-
-    .popup__fill--wide {
-        min-width: 160px;
-    }
 }
 
 @media (max-width: 1300px) {
@@ -327,13 +319,5 @@
 
     .popup__form--gift .popup__inputs {
         margin-bottom: 16px;
-    }
-
-    .popup__fill--wide {
-        min-width: 120px;
-    }
-
-    .popup__fill {
-        min-width: 90px;
     }
 }

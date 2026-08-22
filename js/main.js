@@ -286,7 +286,7 @@ if (menu && menuOpenBtn) {
       }
       validator.addRequiredGroup(
         contactGroup,
-        'Заполните это поле!',
+        'Выберите вариант!',
         { errorsContainer: box }
       );
     }

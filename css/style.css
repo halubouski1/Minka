@@ -675,11 +675,11 @@ ul {
     display: inline-block;
     border-color: #000;
     color: #000;
+    transition: all 0.25s ease;
 }
 
 .buy__catalog:hover {
-    background-color: #000;
-    color: #fff;
+    opacity: 0.5;
 }
 
 /* ==========================================================================
@@ -1044,7 +1044,7 @@ ul {
 .menu__close {
     position: absolute;
     top: 50px;
-    right: 40px;
+    left: 40px;
     display: flex;
     transition: opacity 0.25s ease;
 }
@@ -1159,7 +1159,10 @@ ul {
     align-items: stretch;
     gap: 10px;
     max-width: 100%;
-    max-height: calc(100vh - 80px);
+    /* cap at the design height (933) so a tall screen doesn't force a stray
+       scroll; on a short screen fall back to the viewport minus the .popup
+       padding, and the body scrolls inside */
+    max-height: min(933px, calc(var(--fixed-vh, 100vh) - 80px));
 }
 
 .popup__image {
@@ -1492,7 +1495,7 @@ ul {
 .search__close {
     position: absolute;
     top: 50px;
-    right: 40px;
+    left: 40px;
     display: flex;
     transition: opacity 0.25s ease;
 }
